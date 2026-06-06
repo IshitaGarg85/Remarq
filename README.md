@@ -1,71 +1,116 @@
-# remarq README
+# Remarq
 
-This is the README for your extension "remarq". After writing up a brief description, we recommend including the following sections.
-
-## Features
-
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+**Rich styled comment annotations for VS Code.** Write notes in your code with custom color, font, and size — without changing your syntax or adding any new file formats.
 
 ---
 
-## Following extension guidelines
+## Get started in 10 seconds
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+1. Press `Ctrl+Shift+R` anywhere in your code file
+2. Pick a type, color, font, and size from the toolbar
+3. Hit **Insert** — done
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+No syntax to memorize. No config files. Just open the toolbar and annotate.
 
-## Working with Markdown
+---
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+## What it looks like
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+Each comment type has its own color and label:
 
-## For more information
+| Type | Color | Use it for |
+|------|-------|------------|
+| `note` | 🟢 Green | General notes, reminders, context |
+| `warn` | 🟡 Amber | Gotchas, edge cases, things that can break |
+| `imp` | 🔴 Pink | Critical lines, never-touch-this, blockers |
+| `todo` | 🟣 Purple | Tasks, follow-ups, things left to do |
+| `research` | 🔵 Blue | Open questions, things to investigate |
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+---
 
-**Enjoy!**
+## Keyboard shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+Shift+R` | Open toolbar — insert or restyle a comment |
+| `Ctrl+Shift+E` | Edit the message text of the current comment |
+| `Ctrl+Shift+D` | Delete the current comment line |
+
+Right-click in the editor to access all commands from the context menu.
+
+---
+
+## The toolbar
+
+Press `Ctrl+Shift+R` to open the visual toolbar on the right side of your editor.
+
+- **Type** — note, warn, imp, todo, research
+- **Align** — left, center, right
+- **Size** — font size for the message
+- **Font** — Mono, Sans, or Serif
+- **Color** — 7 presets or any custom hex via the color picker
+
+Hit **Insert** and the line appears above your cursor. No typing required.
+
+When your cursor is already on a remarq line, the toolbar auto-fills with its current settings — change what you want and hit Insert to update it.
+
+---
+
+## The syntax (for those who want to type it directly)
+
+```python
+#@ [warn] | timestamp drift > 1000ms will break auth
+#@ [note] font=serif size=15 | returns early if cache hit
+#@ [imp] color=#ff6b6b | never remove this line
+#@ [todo] | add retry logic with exponential backoff
+#@ [research] align=center | is this O(n) or O(n log n)?
+```
+
+```javascript
+//@ [warn] | don't call this before auth is initialized
+//@ [note] | handles both market and limit order types
+```
+
+```sql
+--@ [imp] | this index is critical — do not drop it
+--@ [todo] | optimize this join for large datasets
+```
+
+Format: `<prefix> [type] key=value ... | your message`
+
+| Option | Values |
+|--------|--------|
+| `size` | any number, e.g. `size=16` |
+| `font` | `mono` `sans` `serif` |
+| `color` | any hex, e.g. `color=#ff6b6b` |
+| `align` | `left` `center` `right` |
+
+---
+
+## Hover preview
+
+Hover over any remarq line to see a styled popup with the label and message — useful when decorations are small or the line is hard to read.
+
+---
+
+## Supported languages
+
+| Language | Prefix |
+|----------|--------|
+| Python, Shell, Ruby, R | `#@` |
+| JavaScript, TypeScript, C, C++, Java, Go, Rust | `//@` |
+| SQL, Lua, Haskell | `--@` |
+
+Any other language falls back to `//@`.
+
+---
+
+## How it works
+
+The decoration is visual only. The raw syntax is still valid code — it's just a comment. Teammates without Remarq installed see a normal comment. Nothing breaks, nothing changes in your actual file.
+
+---
+
+## License
+
+MIT
