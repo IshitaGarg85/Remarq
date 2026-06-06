@@ -2,8 +2,6 @@
 
 **Rich styled comment annotations for VS Code.** Write notes in your code with custom color, font, and size — without changing your syntax or adding any new file formats.
 
-![Remarq in action](https://raw.githubusercontent.com/IshitaGarg85/remarq/main/assets/demo.png)
-
 ---
 
 ## Get started in 10 seconds
