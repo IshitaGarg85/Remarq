@@ -1,0 +1,57 @@
+{
+  "name": "remarq",
+  "type": "commonjs",
+  "displayName": "Remarq",
+  "description": "Rich styled comment annotations — color, font, size, without touching your code",
+  "version": "0.1.0",
+  "publisher": "Ishita Garg",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "remarq.openToolbar", "title": "Remarq: Open Toolbar" },
+      { "command": "remarq.editMessage", "title": "Remarq: Edit Comment Message" },
+      { "command": "remarq.toggle",      "title": "Remarq: Toggle Decorations" },
+      { "command": "remarq.deleteLine", "title": "Remarq: Delete Comment" }
+    ],
+    "keybindings": [
+      {
+        "command": "remarq.openToolbar",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "remarq.editMessage",
+        "key": "ctrl+shift+e",
+        "mac": "cmd+shift+e",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "remarq.deleteLine",
+        "key": "ctrl+shift+d",
+        "mac": "cmd+shift+d",
+        "when": "editorTextFocus"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        { "command": "remarq.openToolbar", "group": "remarq@1", "when": "editorTextFocus" },
+        { "command": "remarq.editMessage", "group": "remarq@2", "when": "editorTextFocus" },
+        { "command": "remarq.deleteLine", "group": "remarq@3", "when": "editorTextFocus" }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.0.0"
+  }
+}
