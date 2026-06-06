@@ -3,7 +3,7 @@
   "type": "commonjs",
   "displayName": "Remarq",
   "description": "Rich styled comment annotations — color, font, size, without touching your code",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "ishitagarg",
   "icon": "icon.png",
   "keywords": ["comments", "annotations", "notes", "highlight", "productivity"],

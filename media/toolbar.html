@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Remarq Toolbar</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--vscode-editor-background, #1e1e2e);
+    color: var(--vscode-editor-foreground, #cdd6f4);
+    padding: 0; overflow: hidden; user-select: none;
+  }
+  .toolbar {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+    background: var(--vscode-editorWidget-background, #181825);
+    border: 1px solid var(--vscode-editorWidget-border, #313244);
+    border-radius: 8px; padding: 6px 10px;
+  }
+  .section { display: flex; align-items: center; gap: 4px; }
+  .sep { width: 1px; height: 22px; background: var(--vscode-editorWidget-border, #313244); margin: 0 4px; }
+  .lbl { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.07em; }
+
+  .type-btn {
+    padding: 3px 9px; border-radius: 20px; border: 1px solid transparent;
+    font-size: 11px; font-weight: 500; cursor: pointer; background: transparent; transition: all 0.12s;
+  }
+  .type-note { color: #97c459; } .type-note.active { background: #0e2a1f; border-color: #97c459; }
+  .type-warn { color: #ef9f27; } .type-warn.active { background: #2e1f0e; border-color: #ef9f27; }
+  .type-imp  { color: #d4537e; } .type-imp.active  { background: #1f1020; border-color: #d4537e; }
+  .type-todo { color: #cba6f7; } .type-todo.active { background: #2a1f3d; border-color: #cba6f7; }
+  .type-research { color: #89b4fa; } .type-research.active { background: #0e1a2e; border-color: #89b4fa; }
+
+  .fmt-btn {
+    width: 26px; height: 26px; border-radius: 5px; border: 1px solid transparent;
+    background: transparent; color: var(--vscode-editor-foreground, #cdd6f4);
+    cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
+    transition: all 0.1s;
+  }
+  .fmt-btn:hover { background: #2a2a3a; }
+  .fmt-btn.active { background: #3a3a5c; border-color: #5555aa; }
+
+  .size-input {
+    width: 42px; height: 26px; border-radius: 5px;
+    border: 1px solid #3a3a5c; background: #1a1a2a; color: #cdd6f4;
+    font-size: 12px; text-align: center; padding: 0 4px;
+  }
+  .font-select {
+    height: 26px; border-radius: 5px; border: 1px solid #3a3a5c;
+    background: #1a1a2a; color: #cdd6f4; font-size: 11px; padding: 0 4px; cursor: pointer;
+  }
+  .swatch {
+    width: 18px; height: 18px; border-radius: 50%; cursor: pointer;
+    border: 2px solid transparent; transition: transform 0.1s; flex-shrink: 0;
+  }
+  .swatch:hover { transform: scale(1.2); }
+  .swatch.active { border-color: white; transform: scale(1.15); }
+  .custom-color-wrap { position: relative; width: 18px; height: 18px; }
+  .custom-color-wrap input[type=color] {
+    opacity: 0; position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; border: none; padding: 0;
+  }
+  .custom-color-icon {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; pointer-events: none;
+  }
+  .apply-btn {
+    height: 26px; padding: 0 12px; border-radius: 5px;
+    background: var(--vscode-button-background, #4040aa);
+    color: var(--vscode-button-foreground, #fff);
+    font-size: 12px; font-weight: 500; cursor: pointer; border: none; white-space: nowrap;
+  }
+  .apply-btn:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+<div class="toolbar">
+
+  <div class="section">
+    <span class="lbl">type</span>
+    <button class="type-btn type-note active"   data-type="note">note</button>
+    <button class="type-btn type-warn"           data-type="warn">warn</button>
+    <button class="type-btn type-imp"            data-type="imp">imp</button>
+    <button class="type-btn type-todo"           data-type="todo">todo</button>
+    <button class="type-btn type-research"       data-type="research">research</button>
+  </div>
+
+  <div class="sep"></div>
+
+  <div class="section">
+    <span class="lbl">align</span>
+    <button class="fmt-btn active" id="alignLeft"   data-align="left"   title="Left">&#8676;</button>
+    <button class="fmt-btn"        id="alignCenter" data-align="center" title="Center">&#8660;</button>
+    <button class="fmt-btn"        id="alignRight"  data-align="right"  title="Right">&#8677;</button>
+  </div>
+
+  <div class="sep"></div>
+
+  <div class="section">
+    <span class="lbl">size</span>
+    <input class="size-input" type="number" id="sizeInput" value="13" min="10" max="24" />
+  </div>
+
+  <div class="sep"></div>
+
+  <div class="section">
+    <span class="lbl">font</span>
+    <select class="font-select" id="fontSelect">
+      <option value="mono">Mono</option>
+      <option value="sans">Sans</option>
+      <option value="serif">Serif</option>
+    </select>
+  </div>
+
+  <div class="sep"></div>
+
+  <div class="section">
+    <span class="lbl">color</span>
+    <div style="display:flex;gap:4px;align-items:center">
+      <div class="swatch active" style="background:#97c459" data-color="#97c459"></div>
+      <div class="swatch" style="background:#ef9f27" data-color="#ef9f27"></div>
+      <div class="swatch" style="background:#d4537e" data-color="#d4537e"></div>
+      <div class="swatch" style="background:#cba6f7" data-color="#cba6f7"></div>
+      <div class="swatch" style="background:#89b4fa" data-color="#89b4fa"></div>
+      <div class="swatch" style="background:#5dcaa5" data-color="#5dcaa5"></div>
+      <div class="swatch" style="background:#f09795" data-color="#f09795"></div>
+      <div class="custom-color-wrap" title="Custom color">
+        <div class="custom-color-icon">+</div>
+        <input type="color" id="customColor" value="#ffffff" />
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <button class="apply-btn" id="applyBtn">Insert ↵</button>
+
+</div>
+
+<script>
+  const vscode = acquireVsCodeApi();
+  let state = { type:'note', align:'left', size:13, font:'mono', color:'#97c459' };
+  const prev = vscode.getState();
+  if (prev) Object.assign(state, prev);
+
+  function save() { vscode.setState(state); }
+
+  document.querySelectorAll('.type-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.type = btn.dataset.type;
+      save();
+    });
+  });
+
+  document.querySelectorAll('[data-align]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-align]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.align = btn.dataset.align;
+      save();
+    });
+  });
+
+  document.getElementById('sizeInput').addEventListener('change', e => {
+    state.size = parseInt(e.target.value) || 13; save();
+  });
+  document.getElementById('fontSelect').addEventListener('change', e => {
+    state.font = e.target.value; save();
+  });
+
+  document.querySelectorAll('.swatch').forEach(s => {
+    s.addEventListener('click', () => {
+      document.querySelectorAll('.swatch').forEach(x => x.classList.remove('active'));
+      s.classList.add('active');
+      state.color = s.dataset.color;
+      save();
+    });
+  });
+
+  document.getElementById('customColor').addEventListener('input', e => {
+    document.querySelectorAll('.swatch').forEach(x => x.classList.remove('active'));
+    state.color = e.target.value;
+    save();
+  });
+
+  document.getElementById('applyBtn').addEventListener('click', () => {
+    vscode.postMessage({ command: 'insert', ...state });
+  });
+
+  window.addEventListener('message', e => {
+    if (e.data.command === 'prefill') {
+      Object.assign(state, e.data);
+      applyUI();
+    }
+  });
+
+  function applyUI() {
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === state.type));
+    document.querySelectorAll('[data-align]').forEach(b => b.classList.toggle('active', b.dataset.align === state.align));
+    document.getElementById('sizeInput').value = state.size;
+    document.getElementById('fontSelect').value = state.font;
+    document.querySelectorAll('.swatch').forEach(s => s.classList.toggle('active', s.dataset.color === state.color));
+  }
+
+  applyUI();
+</script>
+</body>
+</html>

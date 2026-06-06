@@ -83,7 +83,7 @@ export class RemarqToolbar {
       }
     );
 
-    const htmlPath = path.join(this.context.extensionPath, 'src', 'toolbar.html');
+    const htmlPath = path.join(this.context.extensionPath, 'media', 'toolbar.html');
     this.panel.webview.html = fs.readFileSync(htmlPath, 'utf8');
 
     this.panel.webview.onDidReceiveMessage(
